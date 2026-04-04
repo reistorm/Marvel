@@ -1,6 +1,7 @@
 class MarvelService {
     _apiBase = 'https://marvel-server-zeta.vercel.app/'
     _apiKey = 'apikey=d4eecb0c66dedbfae4eab45d312fc1df'
+    _baseOffset = 0;
     getResource = async (url) => {
         let res = await fetch(url);
 
@@ -10,8 +11,8 @@ class MarvelService {
         return await res.json()
     }
 
-    getAllCharacters = async () => {
-        const res = await this.getResource(`${this._apiBase}characters?limit=15&${this._apiKey}`);
+    getAllCharacters = async (offset = this._baseOffset) => {
+        const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`);
         return res.data.results.map(this._transformCharacter);
     }
 
@@ -21,7 +22,13 @@ class MarvelService {
     }
 
     _transformCharacter = (char) => {
+        let thumbnail = char.thumbnail.path + '.' + char.thumbnail.extension;
+
+        if (thumbnail.includes('wallpaperflare')) {
+            thumbnail = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg';
+        }
         return {
+            id: char.id,
             name: char.name,
             description: char.description,
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
@@ -32,5 +39,3 @@ class MarvelService {
 }
 
 export default MarvelService;
-
-//'https://gateway.marvel.com:443/v1/public/characters?apikey=c5d6fc8b83116d92ed468ce36bac6c62'
