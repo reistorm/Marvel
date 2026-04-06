@@ -62,7 +62,9 @@ class CharList extends Component {
             }
 
             return (
-                <li className="char__item" key={item.id}>
+                <li className="char__item"
+                    key={item.id}
+                    onClick={() => this.props.onCharSelected(item.id)}>
                     <img
                         src={item.thumbnail}
                         alt={item.name}
@@ -96,7 +98,7 @@ class CharList extends Component {
                 {errorMessage}
                 {spinner}
                 {items}
-                
+
                 <button className="button button__main button__long"
                     disabled={charEnded}
                     style={{ 'display': charEnded ? 'none' : 'block' }}
